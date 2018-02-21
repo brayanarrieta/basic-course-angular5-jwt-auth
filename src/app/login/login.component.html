@@ -1,3 +1,40 @@
-<p>
-  login works!
-</p>
+<div class="row justify-content-center mt-4 ">
+  <div class=" col-lg-4 col-sm-12 ">
+    <!-- Form login -->
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <!--Form without header-->
+      <div class="card">
+
+        <div class="card-body mx-4">
+          <!--Header-->
+          <div class="text-center">
+            <h3 class="dark-grey-text mb-3"><strong>Sign in</strong></h3>
+          </div>
+          <!--Body-->
+          <div class="form-group">
+            <label for="email" class="">Email</label>
+            <input type="email" id="email" email="true"
+                   formControlName="email"  class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="password" class="">Password</label>
+            <input  type="password"  id="password"
+                   class="form-control" formControlName="password" required>
+            <p class="font-small blue-text d-flex justify-content-end">
+              Forgot <a href="#" class="blue-text ml-1"> Password?</a>
+            </p>
+          </div>
+          <div class="text-center mb-3">
+            <button type="submit" class="btn btn-block btn-rounded btn-primary z-depth-1a">Sign in</button>
+          </div>
+        </div>
+        <!--Footer-->
+        <div class="modal-footer mx-5 pt-3 mb-1">
+          <p class="font-small grey-text d-flex justify-content-end">Not a member? <a class="blue-text ml-1"> Sign Up</a></p>
+        </div>
+      </div>
+      <!--/Form without header-->
+    </form>
+    <!-- Form login -->
+  </div>
+</div>
