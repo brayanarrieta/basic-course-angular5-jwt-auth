@@ -14,12 +14,12 @@
           <div class="form-group">
             <label for="email" class="">Email</label>
             <input type="email" id="email" email="true"
-                   formControlName="email"  class="form-control" required>
+                   formControlName="email"  class="form-control" ngModel="{{user.email}}" required>
           </div>
           <div class="form-group">
             <label for="password" class="">Password</label>
             <input  type="password"  id="password"
-                   class="form-control" formControlName="password" required>
+                   class="form-control" formControlName="password" ngModel="{{user.password}}" required>
             <p class="font-small blue-text d-flex justify-content-end">
               Forgot <a href="#" class="blue-text ml-1"> Password?</a>
             </p>
