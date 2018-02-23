@@ -10,11 +10,44 @@ import {
 import {AuthService} from './auth.service';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
-import {request} from 'http';
+import {Subject} from 'rxjs/Subject';
+import 'rxjs/add/observable/empty';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
+  refreshTokenInProgress = false;
+
+  tokenRefreshedSource = new Subject();
+  tokenRefreshed$ = this.tokenRefreshedSource.asObservable();
   constructor(private authService: AuthService) { }
+
+  refactorRequestWithNewToken(request) {
+    return request.clone({
+      setHeaders: {
+        'Authorization':  `Bearer ${this.authService.getAuthorization().getValue().access_token}`
+      }
+    });
+  }
+  refresh(): any {
+    if (this.refreshTokenInProgress) {
+      return new Observable(observer => {
+        this.tokenRefreshed$.subscribe(() => {
+          observer.next();
+          observer.complete();
+        });
+      });
+    } else {
+      this.refreshTokenInProgress = true;
+
+      return this.authService.refreshToken().do(() => {
+          this.refreshTokenInProgress = false;
+          this.tokenRefreshedSource.next();
+        });
+    }
+  }
+  logout() {
+    this.authService.logout();
+  }
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token: any = this.authService.getAuthorization().getValue();
     req = req.clone({
@@ -27,11 +60,20 @@ export class AuthInterceptor implements HttpInterceptor {
         // do stuff with response if you want
       }
     }, (err: any) => {
+      // Error in the request
       if (err instanceof HttpErrorResponse) {
         if (err.status === 401) {
-          // collect errors
-          this.authService.collectFailedRequest(request);
+          return this.refresh()
+            .switchMap(() => {
+              req = this.refactorRequestWithNewToken(req);
+              return next.handle(req);
+            })
+            .catch(() => {
+              this.logout();
+              return Observable.empty();
+            });
         }
+        return Observable.throw(err);
       }
     });
   }
