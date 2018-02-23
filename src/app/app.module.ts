@@ -7,10 +7,11 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import {AppRoutingModule} from './app-routing.module';
 import {ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AuthService} from './auth/auth.service';
 import {AuthGuard} from './auth/auth.guard';
 import {UserService} from "./user.service";
+import {AuthInterceptor} from "./auth/auth.interceptor";
 
 
 @NgModule({
@@ -25,7 +26,16 @@ import {UserService} from "./user.service";
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [AuthService, AuthGuard, UserService],
+  providers: [
+    AuthService,
+    AuthGuard,
+    UserService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
