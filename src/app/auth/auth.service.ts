@@ -11,8 +11,9 @@ const httpOptions = {
 export class AuthService {
   private cachedRequests: Array<HttpRequest<any>> = [];
   private authorization = new BehaviorSubject<Authorization>(null);
-  constructor(private router: Router, private httpClient: HttpClient) { }
 
+
+  constructor(private router: Router, private httpClient: HttpClient) { }
 
   getAuthorization(): BehaviorSubject<Authorization> {
     return this.authorization;
@@ -31,7 +32,7 @@ export class AuthService {
         (error ) => console.error(error)
       );
   }
-  refresh(): void {
+  refreshToken(): any {
     this.httpClient.post<Authorization>('http://localhost:8000/api/auth/refresh', null, httpOptions )
       .subscribe(
         (data) => {

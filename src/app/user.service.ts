@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {User} from './user';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {AuthService} from "./auth/auth.service";
+import {AuthService} from './auth/auth.service';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
