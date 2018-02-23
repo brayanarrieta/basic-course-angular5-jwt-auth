@@ -25,7 +25,6 @@ export class AuthService {
       .subscribe(
         (data) => {
           this.setAuthorization(data);
-          console.log(data);
           this.router.navigate(['/home']);
         },
         (error ) => console.error(error)
